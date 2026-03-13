@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "autoforge"
+version = "0.1.0"
+description = "Autonomous app builder using plan/build/test/evaluate/repeat methodology"
+requires-python = ">=3.11"
+dependencies = [
+    "click>=8.1",
+    "anthropic>=0.40",
+]
+
+[project.scripts]
+autoforge = "autoforge.cli:main"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
