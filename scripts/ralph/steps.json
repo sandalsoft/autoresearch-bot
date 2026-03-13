@@ -1,1 +1,149 @@
-[]
+[
+  {
+    "id": 1,
+    "phase": "scaffolding",
+    "task": "Create Python package structure — autoforge/ with __init__.py, pyproject.toml with Click + anthropic deps, .gitignore",
+    "files": ["autoforge/__init__.py", "pyproject.toml"],
+    "done": false
+  },
+  {
+    "id": 2,
+    "phase": "scaffolding",
+    "task": "Create autoforge/cli.py — Click CLI entry point with forge subcommand accepting --idea",
+    "files": ["autoforge/cli.py", "pyproject.toml"],
+    "done": false
+  },
+  {
+    "id": 3,
+    "phase": "scaffolding",
+    "task": "Create autoforge/config.py — ForgeConfig dataclass with model constants, max iterations, timeout, API key from env",
+    "files": ["autoforge/config.py"],
+    "done": false
+  },
+  {
+    "id": 4,
+    "phase": "scaffolding",
+    "task": "Create autoforge/llm.py — LLM client wrapper with chat(), generate_code(), judge(), markdown stripping, syntax validation, context management",
+    "files": ["autoforge/llm.py"],
+    "done": false
+  },
+  {
+    "id": 5,
+    "phase": "interviewer",
+    "task": "Create autoforge/spec.py — ProjectSpec and EvalTask dataclasses with to_markdown(), to_json(), save(), load()",
+    "files": ["autoforge/spec.py"],
+    "done": false
+  },
+  {
+    "id": 6,
+    "phase": "interviewer",
+    "task": "Create autoforge/interviewer.py — Interviewer class conducting CLI interview via click.prompt(), outputting ProjectSpec with eval tasks",
+    "files": ["autoforge/interviewer.py"],
+    "done": false
+  },
+  {
+    "id": 7,
+    "phase": "planner",
+    "task": "Create autoforge/planner.py — Planner generating Plan with PlanSteps and file tree from ProjectSpec via Claude Opus",
+    "files": ["autoforge/planner.py"],
+    "done": false
+  },
+  {
+    "id": 8,
+    "phase": "planner",
+    "task": "Create autoforge/reviewer.py — PlanReviewer using Claude Opus for Carmack-level review with auto-revision (max 2 rounds)",
+    "files": ["autoforge/reviewer.py"],
+    "done": false
+  },
+  {
+    "id": 9,
+    "phase": "builder",
+    "task": "Create autoforge/project.py — Project class with init(), commit(), revert(), get_diff(), install_deps() using subprocess git",
+    "files": ["autoforge/project.py"],
+    "done": false
+  },
+  {
+    "id": 10,
+    "phase": "builder",
+    "task": "Create autoforge/builder.py — Builder iterating plan steps, generating code via Claude Sonnet, validating syntax, committing, installing deps",
+    "files": ["autoforge/builder.py"],
+    "done": false
+  },
+  {
+    "id": 11,
+    "phase": "test-eval",
+    "task": "Create autoforge/runner.py — TestRunner with run_tests() and run_task() using subprocess with timeouts",
+    "files": ["autoforge/runner.py"],
+    "done": false
+  },
+  {
+    "id": 12,
+    "phase": "test-eval",
+    "task": "Create autoforge/evaluator.py — Evaluator judging results against eval criteria via Claude Haiku with output truncation",
+    "files": ["autoforge/evaluator.py"],
+    "done": false
+  },
+  {
+    "id": 13,
+    "phase": "refinement",
+    "task": "Create autoforge/refiner.py — Refiner with failed_attempts memory, generating targeted fixes via Claude Sonnet",
+    "files": ["autoforge/refiner.py"],
+    "done": false
+  },
+  {
+    "id": 14,
+    "phase": "refinement",
+    "task": "Create autoforge/loop.py — ForgeLoop with test/eval/refine cycle, revert logic, 3-strike skip, state checkpointing",
+    "files": ["autoforge/loop.py"],
+    "done": false
+  },
+  {
+    "id": 15,
+    "phase": "orchestration",
+    "task": "Create autoforge/pipeline.py — ForgePipeline wiring Interview, Plan, Review, Build, Loop with error handling and banners",
+    "files": ["autoforge/pipeline.py"],
+    "done": false
+  },
+  {
+    "id": 16,
+    "phase": "orchestration",
+    "task": "Wire up autoforge/cli.py with --output-dir, --max-iterations, --skip-review, --verbose, --timeout flags and resume subcommand",
+    "files": ["autoforge/cli.py"],
+    "done": false
+  },
+  {
+    "id": 17,
+    "phase": "testing",
+    "task": "Create tests/test_config.py — Unit tests for ForgeConfig defaults and env var loading",
+    "files": ["tests/test_config.py"],
+    "done": false
+  },
+  {
+    "id": 18,
+    "phase": "testing",
+    "task": "Create tests/test_spec.py — Unit tests for ProjectSpec/EvalTask serialization roundtrip",
+    "files": ["tests/test_spec.py"],
+    "done": false
+  },
+  {
+    "id": 19,
+    "phase": "testing",
+    "task": "Create tests/test_loop.py — Unit tests for ForgeLoop with mocked LLM: success stop, revert, max iterations, 3-strike skip",
+    "files": ["tests/test_loop.py"],
+    "done": false
+  },
+  {
+    "id": 20,
+    "phase": "testing",
+    "task": "Create tests/test_pipeline.py — Integration test with mocked LLM verifying full flow produces expected artifacts",
+    "files": ["tests/test_pipeline.py"],
+    "done": false
+  },
+  {
+    "id": 21,
+    "phase": "testing",
+    "task": "End-to-end smoke test — Verify CLI starts and basic argument parsing works",
+    "files": [],
+    "done": false
+  }
+]
