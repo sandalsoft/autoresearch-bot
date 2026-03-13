@@ -1,100 +1,133 @@
-# Claude Code Template
+# Autoforge
 
-A template repository for bootstrapping projects using Claude's code execution environment on claude.ai.
+Autonomous app builder that applies the [autoresearch](https://github.com/karpathy/autoresearch) methodology — **plan, build, test, evaluate, repeat** — to building software instead of training models.
 
-## How to Use
+Give it an idea. It interviews you, generates a plan, reviews it, builds the app, then iteratively tests and refines it until it works.
 
-### 1. Create a new repo from this template
-- Click **"Use this template"** on GitHub
-- Name your new repo
-- Clone it or leave it on GitHub
-
-### 2. Start a new conversation on claude.ai
-
-Tell Claude:
-
-> Clone https://github.com/YOUR_USERNAME/YOUR_NEW_REPO and build me a [your idea]
-
-Or if you just want to use the template without a GitHub repo:
-
-> Read the CLAUDE.md and flow commands from my template, then interview me about building [your idea]
-
-### 3. The Flow
-
-1. **Interview** — Claude asks you questions about the project
-2. **Plan** — Claude generates a detailed implementation plan
-3. **Execute** — Ralph (the autonomous executor) builds it step by step
-
-## Structure
+## How It Works
 
 ```
-├── CLAUDE.md                          # Project instructions for Claude
-├── .claude/
-│   ├── commands/                      # Slash commands (flow + skills)
-│   │   ├── flow-next-interview.md     # Discovery interview
-│   │   ├── flow-next-plan.md          # Plan generation
-│   │   ├── flow-next-init-ralph.md    # Autonomous execution
-│   │   └── *.md                       # 12 installed skill commands
-│   └── skills/                        # Supporting files for skills
-│       ├── session-handoff/           # Scripts & templates
-│       ├── qa-test-planner/           # Test case generators & references
-│       ├── c4-architecture/           # C4 syntax & pattern references
-│       ├── database-schema-designer/  # Schema checklists & templates
-│       ├── dependency-updater/        # Update scripts
-│       └── clean-web-design/          # Design tokens & component patterns
-├── scripts/ralph/
-│   ├── mark_done.py                   # Step tracking utility
-│   ├── steps.json                     # Machine-readable plan (generated)
-│   ├── logs/                          # Execution logs
-│   └── state/                         # State tracking
-├── docs/
-│   ├── interview-answers.md           # Interview output (generated)
-│   └── plugins.md                     # Plugin documentation
-├── scripts/
-│   ├── setup-plugins.sh               # Plugin installation script
-│   └── ralph/
-│       └── ...
-└── plan.md                            # Implementation plan (generated)
+Interview → Plan → Carmack Review → Build → [Test → Evaluate → Refine] × 10 → Done
 ```
 
-## Flow Commands
+1. **Interview** — Structured discovery interview gathers requirements, tech stack, features, and success criteria
+2. **Plan** — Generates a step-by-step implementation plan from the interview
+3. **Review** — Carmack-level code review of the plan using Claude Opus, with auto-revision for critical issues
+4. **Build** — Executes the full plan, generating the complete app in one pass
+5. **Refine** — Iterative loop (up to 10 cycles):
+   - Runs tests (hard gate — must pass)
+   - Executes user-defined evaluation tasks
+   - LLM judges results against success criteria
+   - Auto-reverts regressions
+   - Stops early when "good enough"
 
-| Command | What it does |
-|---------|-------------|
-| `/flow-next-interview <idea>` | Structured discovery interview |
-| `/flow-next-plan` | Generate implementation plan |
-| `/flow-next-init-ralph` | Begin autonomous execution |
+Each generated project gets its own git repo with meaningful commit history.
 
-## Plugins
+## Quickstart
 
-Optional plugins for safety and continuity:
+```bash
+# Install
+pip install -e .
 
-| Plugin | Purpose | Install |
-|--------|---------|---------|
-| [Destructive Command Guard](https://github.com/Dicklesworthstone/destructive_command_guard) | Blocks dangerous commands before execution | `bash scripts/setup-plugins.sh` |
-| [Claude-Mem](https://github.com/thedotmack/claude-mem) | Persistent memory across sessions | `/plugin install claude-mem` |
+# Set your API key
+export ANTHROPIC_API_KEY=your-key-here
 
-Run `bash scripts/setup-plugins.sh` to install both, or see `docs/plugins.md` for details.
+# Build an app
+autoforge forge --idea "a CLI tool that converts CSV files to JSON"
+```
 
-## Installed Skills
+Autoforge will interview you, then autonomously build, test, and refine the app.
 
-This template comes with 12 pre-installed Claude Code skills:
+## Getting Started
 
-| Command | Purpose |
-|---------|---------|
-| `/crafting-effective-readmes` | Write or improve README files matched to project type |
-| `/commit-work` | Review, stage, and create well-structured git commits |
-| `/game-changing-features` | Find 10x product opportunities and high-leverage improvements |
-| `/mermaid-diagrams` | Create software diagrams (class, sequence, flowchart, ERD, C4) |
-| `/napkin` | Per-repo learning file — tracks mistakes and patterns |
-| `/tailwind-v4-shadcn` | Set up Tailwind v4 + shadcn/ui with correct architecture |
-| `/session-handoff` | Create handoff documents for seamless session transfers |
-| `/qa-test-planner` | Generate test plans, test cases, regression suites, bug reports |
-| `/c4-architecture` | Generate C4 model architecture diagrams in Mermaid |
-| `/database-schema-designer` | Design SQL/NoSQL schemas with migrations and indexing |
-| `/dependency-updater` | Smart dependency management for any language |
-| `/clean-web-design` | Professional design system with HSL tokens and components |
+### Prerequisites
 
-## Customization
+- Python 3.11+
+- An [Anthropic API key](https://console.anthropic.com/)
 
-Edit `CLAUDE.md` to add your own coding standards, preferred tech stack, or project-specific instructions. Add custom flow commands in `.claude/commands/`.
+### Installation
+
+```bash
+git clone https://github.com/sandalsoft/autoresearch-bot.git
+cd autoresearch-bot
+pip install -e .
+```
+
+### Usage
+
+**Build a new app:**
+
+```bash
+autoforge forge --idea "a URL shortener with click tracking"
+```
+
+**Customize the run:**
+
+```bash
+autoforge forge \
+  --idea "a REST API for managing bookmarks" \
+  --output-dir ./projects \
+  --max-iterations 5 \
+  --timeout 120 \
+  --skip-review
+```
+
+**Resume from a checkpoint** (if a run was interrupted):
+
+```bash
+autoforge resume ./output/my-project
+```
+
+### CLI Options
+
+| Flag | Default | Description |
+|------|---------|-------------|
+| `--idea`, `-i` | *(prompted)* | App idea description |
+| `--output-dir`, `-o` | `./output` | Where generated projects are created |
+| `--max-iterations`, `-n` | `10` | Max refinement loop iterations |
+| `--skip-review` | `false` | Skip the Carmack-level plan review |
+| `--verbose`, `-v` | `false` | Verbose output |
+| `--timeout`, `-t` | `60` | Subprocess timeout in seconds |
+
+## Architecture
+
+```
+autoforge/
+├── cli.py           # Click CLI entry point
+├── config.py        # Configuration and model constants
+├── llm.py           # Anthropic SDK wrapper with retry and parsing
+├── interviewer.py   # Structured discovery interview
+├── spec.py          # ProjectSpec and EvalTask data models
+├── planner.py       # Plan generation from spec
+├── reviewer.py      # Carmack-level plan review
+├── project.py       # Git operations for generated projects
+├── builder.py       # Code generation with syntax validation
+├── runner.py        # Test and task execution with timeouts
+├── evaluator.py     # LLM-judged evaluation against criteria
+├── refiner.py       # Targeted code fixes with failed-attempt memory
+├── loop.py          # Refinement loop with revert and checkpointing
+└── pipeline.py      # Full lifecycle orchestration
+```
+
+### Key Design Decisions
+
+- **Single LLM provider** — Claude only (Opus for planning/review, Sonnet for code gen, Haiku for evaluation). No OpenAI dependency.
+- **Subprocess git** — Direct `git` calls instead of GitPython. Simpler, fewer dependencies.
+- **Failed-attempt memory** — The refiner tracks what was tried before to avoid repeating the same fix.
+- **3-strike skip** — If the same criteria regresses 3 times, it's skipped to avoid burning tokens.
+- **State checkpointing** — `forge_state.json` saved after each iteration for resume support.
+
+### Evaluation Framework
+
+- **Hard gate**: All tests must pass (test command defined during interview)
+- **Qualitative gate**: User-defined tasks are executed and judged by an LLM against success criteria
+- **Revert policy**: If a refinement breaks previously passing tests, auto-revert
+- **Stop conditions**: All criteria met, or max iterations reached
+
+## Inspired By
+
+[autoresearch](https://github.com/karpathy/autoresearch) by Andrej Karpathy — autonomous ML experiment runner that modifies `train.py`, runs training, evaluates results, and iterates. Autoforge applies the same loop to building entire applications.
+
+## License
+
+MIT
